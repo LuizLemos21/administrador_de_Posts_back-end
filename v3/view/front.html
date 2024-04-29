@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postmanager</title>
+</head>
+<body>
+    <h1>Postmanager</h1>
+
+    <h2>Create User</h2>
+    <form id="userForm">
+        <input type="text" id="userName" placeholder="Enter user name">
+        <input type="email" id="userEmail" placeholder="Enter user email">
+        <input type="password" id="userPassword" placeholder="Enter password">
+        <button type="submit">Create User</button>
+    </form>
+
+    <h2>Users List</h2>
+    <ul id="usersList"></ul>
+
+    <h2>Create Post</h2>
+    <form id="postForm">
+        <textarea id="postContent" placeholder="Enter post content"></textarea>
+        Data de Publicação: <input type="datetime-local" id="postSchedule" placeholder="Schedule Date">
+        <input type="number" id="userId" placeholder="Enter user ID for post">
+        <button type="submit">Create Post</button>
+    </form>
+    
+
+    <h2>Posts List</h2>
+    <ul id="postsList"></ul>
+
+    <script src="app.js"></script>
+</body>
+</html>
