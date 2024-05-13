@@ -48,6 +48,30 @@ button {
     font-size: 16px;
 }
 
+/* Estilo para os itens da lista */
+li {
+    position: relative; /* Adicionando posicionamento relativo para que os botões fiquem posicionados relativamente a este elemento */
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para os botões dentro dos itens da lista */
+li button {
+    position: absolute; /* Definindo posição absoluta para os botões */
+    top: 50%; /* Alinhando os botões verticalmente ao centro do item */
+    transform: translateY(-50%); /* Corrigindo o alinhamento vertical */
+    right: 10px; /* Posicionando os botões no canto direito */
+}
+
+/* Estilo para o primeiro botão dentro dos itens da lista */
+li button:first-child {
+    right: 100px; /* Ajustando a posição do primeiro botão */
+}
+
+
 /* Estilo para os botões de submit */
 button[type="submit"] {
     background-color: #28a745;
@@ -60,14 +84,7 @@ ul {
     margin-bottom: 20px;
 }
 
-/* Estilo para os itens da lista */
-li {
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+
 
 /* Estilo para os botões de ação (Editar, Deletar) */
 .action-button {

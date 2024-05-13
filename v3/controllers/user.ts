@@ -69,9 +69,38 @@ export class UserController {
       }
     }
   }
-  
 
-  
+
+  public async patchUser(req: Request, res: Response) {
+    try {
+      const userId = req.params.id;
+      const userToUpdate = req.body; // Dados enviados na solicitação PATCH
+
+      // Verificar se o usuário existe
+      const existingUser = await User.findByPk(userId);
+      if (!existingUser) {
+          return res.status(404).json({ error: "User not found." });
+      }
+
+      // Atualizar apenas os campos fornecidos na solicitação PATCH
+      await User.update(userToUpdate, {
+          where: { id: userId }
+      });
+
+      // Recuperar o usuário atualizado do banco de dados
+      const updatedUser = await User.findByPk(userId);
+
+      // Retornar o usuário atualizado como resposta
+      res.json({ message: "uSER updated successfully.", user: updatedUser });
+  } catch (err) {
+      if (err instanceof Error) {
+          res.status(500).json({ error: err.message });
+      } else {
+          res.status(500).json({ error: "An unknown error occurred." });
+      }
+  }
+
+  }
 
 
 }

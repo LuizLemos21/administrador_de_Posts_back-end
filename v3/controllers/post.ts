@@ -65,4 +65,35 @@ export class PostController {
       }
     }
   }
+
+  public async patchPost(req: Request, res: Response) {
+    try {
+        const postId = req.params.id;
+        const postToUpdate = req.body; // Dados enviados na solicitação PATCH
+
+        // Verificar se o post existe
+        const existingPost = await Post.findByPk(postId);
+        if (!existingPost) {
+            return res.status(404).json({ error: "Post not found." });
+        }
+
+        // Atualizar apenas os campos fornecidos na solicitação PATCH
+        await Post.update(postToUpdate, {
+            where: { id: postId }
+        });
+
+        // Recuperar o post atualizado do banco de dados
+        const updatedPost = await Post.findByPk(postId);
+
+        // Retornar o post atualizado como resposta
+        res.json({ message: "Post updated successfully.", post: updatedPost });
+    } catch (err) {
+        if (err instanceof Error) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: "An unknown error occurred." });
+        }
+    }
+}
+
 }

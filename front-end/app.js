@@ -49,7 +49,18 @@ function fetchUsers() {
         usersList.innerHTML = ''; // Clear existing users
         users.forEach(user => {
             const li = document.createElement('li');
-            li.textContent = `Name: ${user.nome}, Email: ${user.email}`;
+            li.textContent = `id: ${user.id}, Userame: ${user.nome}, Email: ${user.email} `;
+
+            //Adicionar botões Edit e Delete
+            const editButton = document.createElement('button');
+            editButton.textContent='Edit';
+            editButton.onclick = () => editUser(user.id);
+            li.appendChild(editButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent='Delete';
+            deleteButton.onclick = () => deleteUser(user.id);
+            li.appendChild(deleteButton);
 
 
 
@@ -72,7 +83,7 @@ function fetchPosts() {
             //Adicionar botões Edit e Delete
             const editButton = document.createElement('button');
             editButton.textContent='Edit';
-            editButton.onclick = () => editPost(post.id);
+            editButton.onclick = () => editPost(post.id, post.body);
             li.appendChild(editButton);
 
             const deleteButton = document.createElement('button');
@@ -104,15 +115,23 @@ function deletePost(id){
 
 function editPost(id){
     const newContent = prompt("Insira novo conteudo");
-    const newDate = prompt ("Insira nova data de agendamento");
+    let newDate = prompt ("Insira nova data de agendamento");
+
+    // Validar a data
+    const parsedDate = Date.parse(newDate);
+    if (isNaN(parsedDate)) {
+        // Se a data não for válida, defina como null
+        newDate = null;
+    }
 
     const updatedPost = {
         conteudo: newContent,
-        dataagendamento: newDate
+        dataagendamento: newDate,
+  
     };
 
-    fetch(`http://localhost:3000/post/${id}`,{
-        method: 'PUT',
+    fetch(`http://localhost:3000/post/${id}`, {
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -125,6 +144,52 @@ function editPost(id){
     })
     .catch(error => console.error ('Erro ao atualizar post:', error));
 }
+
+
+// Função para deletar Usuário (ADM)
+function deleteUser(id){
+    if (confirm("Tem certeza de que quer deletar este usuario?")){
+        fetch(`http://localhost:3000/user/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Usuário deletado!');
+            fetchUsers();
+        })
+        .catch(error => console.error('Ocorreu um erro ao deletar o usuario!:', error));
+    }
+
+}
+
+// Função para editar Usuário (ADM)
+function editUser(id){
+    const newname = prompt("Insira novo username");
+    const newemail = prompt ("Insira novo email");
+    const newsenha = prompt ("Insira nova senha");
+
+    const updatedUser = {
+        nome: newname,
+        email: newemail,
+        senha: newsenha
+  
+    };
+
+    fetch(`http://localhost:3000/user/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedUser)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Usuário atualizado');
+        fetchUsers();
+    })
+    .catch(error => console.error ('Erro ao atualizar usuário:', error));
+}
+
 
 // Fetch data initially on page load
 document.addEventListener('DOMContentLoaded', function() {
