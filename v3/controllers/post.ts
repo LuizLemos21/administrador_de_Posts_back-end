@@ -1,5 +1,29 @@
 import { Request, Response } from 'express';
 import { Post } from '../models/post'; 
+import { postToFacebook } from '../services/facebookService';
+import { postToTwitter } from '../services/twitterService';
+import { postToLinkedIn } from '../services/linkedinService';
+
+export const createPost = async (req: Request, res: Response) => {
+  const { message, facebookAccessToken, twitterAccessToken, linkedinAccessToken } = req.body;
+
+  try {
+    if (facebookAccessToken) {
+      await postToFacebook(facebookAccessToken, message);
+    }
+    if (twitterAccessToken) {
+      await postToTwitter(twitterAccessToken, message);
+    }
+    if (linkedinAccessToken) {
+      await postToLinkedIn(linkedinAccessToken, message);
+    }
+    res.status(200).send('Post created successfully on all platforms');
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).send(`Error creating post: ${err.message}`);
+    }
+  }
+};
 
 export class PostController {
   public async getAllPosts(req: Request, res: Response) {
@@ -14,7 +38,7 @@ export class PostController {
       }
     }
   }
-
+/*
   public async createPost(req: Request, res: Response) {
     try {
       const post = await Post.create(req.body);
@@ -27,7 +51,7 @@ export class PostController {
       }
     }
   }
-
+*/
   public async updatePost(req: Request, res: Response) {
     try {
       const updatedPost = await Post.update(req.body, {
