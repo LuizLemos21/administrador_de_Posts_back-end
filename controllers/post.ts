@@ -4,26 +4,7 @@ import { postToFacebook } from '../services/facebookService';
 import { postToTwitter } from '../services/twitterService';
 import { postToLinkedIn } from '../services/linkedinService';
 
-export const createPost = async (req: Request, res: Response) => {
-  const { message, facebookAccessToken, twitterAccessToken, linkedinAccessToken } = req.body;
 
-  try {
-    if (facebookAccessToken) {
-      await postToFacebook(facebookAccessToken, message);
-    }
-    if (twitterAccessToken) {
-      await postToTwitter(twitterAccessToken, message);
-    }
-    if (linkedinAccessToken) {
-      await postToLinkedIn(linkedinAccessToken, message);
-    }
-    res.status(200).send('Post created successfully on all platforms');
-  } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).send(`Error creating post: ${err.message}`);
-    }
-  }
-};
 
 export class PostController {
   public async getAllPosts(req: Request, res: Response) {
@@ -38,20 +19,29 @@ export class PostController {
       }
     }
   }
-/*
-  public async createPost(req: Request, res: Response) {
+
+  public async createPost(req: Request, res: Response): Promise<void> {
+    const { message, facebookAccessToken, twitterAccessToken, linkedinAccessToken, linkedInPersonURN } = req.body;
+
     try {
-      const post = await Post.create(req.body);
-      res.status(201).json(post);
+      if (facebookAccessToken) {
+        await postToFacebook(facebookAccessToken, message);
+      }
+      if (twitterAccessToken) {
+        await postToTwitter(twitterAccessToken, message);
+      }
+      if (linkedinAccessToken) {
+        await postToLinkedIn(linkedinAccessToken, message, linkedInPersonURN );
+      }
+      res.status(200).send('Post created successfully on all platforms');
     } catch (err) {
       if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
-      } else {
-        res.status(500).json({ error: 'An unknown error occurred.' });
+        res.status(500).send(`Error creating post: ${err.message}`);
       }
     }
   }
-*/
+
+
   public async updatePost(req: Request, res: Response) {
     try {
       const updatedPost = await Post.update(req.body, {

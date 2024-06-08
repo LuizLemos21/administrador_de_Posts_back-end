@@ -1,11 +1,16 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../config/sequelize';
+import bcrypt from 'bcrypt';
 
 export class User extends Model {
   public id!: number;
   public nome!: string;
   public email!: string;
   public senha!: string;
+
+  public validPassword(password: string): boolean {
+    return bcrypt.compareSync(password, this.senha);
+  }
 }
 
 User.init({
@@ -21,6 +26,7 @@ User.init({
   email: {
     type: new DataTypes.STRING(128),
     allowNull: false,
+    unique: true,
   },
   senha: {
     type: new DataTypes.STRING(128),
@@ -29,6 +35,17 @@ User.init({
 }, {
   tableName: 'usuario',
   sequelize: sequelize,
-  timestamps: false
+  timestamps: false,
+  hooks: {
+    beforeCreate: async (user: User) => {
+      const salt = await bcrypt.genSalt(10);
+      user.senha = await bcrypt.hash(user.senha, salt);
+    },
+    beforeUpdate: async (user: User) => {
+      if (user.changed('senha')) {
+        const salt = await bcrypt.genSalt(10);
+        user.senha = await bcrypt.hash(user.senha, salt);
+      }
+    }
+  }
 });
-

@@ -14,9 +14,11 @@ export const postToTwitter = async (accessToken: string, message: string) => {
   try {
     const response = await axios.post(url, data, { headers });
     return response.data;
-  } catch (error) {
-    if (error instanceof Error){
-        throw new Error(`Twitter API error: ${error.response.data.detail}`);
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(`Twitter API error: ${error.response?.data.detail}`);
+    } else {
+      throw new Error(`Unknown error: ${error.message}`);
     }
   }
 };

@@ -2,20 +2,23 @@ import { Request, Response } from 'express';
 import { User } from '../models/user';
 
 export class UserController {
+
+
   public async getAllUsers(req: Request, res: Response) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({ attributes: { exclude: ['senha'] } });
       res.json(users);
     } catch (err) {
-        if (err instanceof Error) {
-            // Now TypeScript knows that 'err' is an Error object
-            res.status(500).json({ error: err.message });
-          } else {
-            // You can add some generic error handling here
-            res.status(500).json({ error: 'An unknown error occurred.' });
-          }
+      if (err instanceof Error) {
+        // Now TypeScript knows that 'err' is an Error object
+        res.status(500).json({ error: err.message });
+      } else {
+        // You can add some generic error handling here
+        res.status(500).json({ error: 'An unknown error occurred.' });
+      }
     }
   }
+  
 
   public async createUser(req: Request, res: Response) {
     try {

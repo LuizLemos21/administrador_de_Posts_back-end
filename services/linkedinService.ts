@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const LINKEDIN_API_URL = 'https://api.linkedin.com/v2/ugcPosts';
 
-export const postToLinkedIn = async (accessToken: string, message: string) => {
+export const postToLinkedIn = async (accessToken: string, message: string, linkedInPersonURN: string) => {
   const url = LINKEDIN_API_URL;
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -10,7 +10,7 @@ export const postToLinkedIn = async (accessToken: string, message: string) => {
     'Content-Type': 'application/json',
   };
   const data = {
-    author: `urn:li:person:${yourLinkedInPersonURN}`,
+    author: `urn:li:person:${linkedInPersonURN}`,
     lifecycleState: 'PUBLISHED',
     specificContent: {
       'com.linkedin.ugc.ShareContent': {
@@ -28,9 +28,11 @@ export const postToLinkedIn = async (accessToken: string, message: string) => {
   try {
     const response = await axios.post(url, data, { headers });
     return response.data;
-  } catch (error) {
-    if (error instanceof Error) {
-    throw new Error(`LinkedIn API error: ${error.response.data.message}`);
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(`LinkedIn API error: ${error.response?.data.message}`);
+    } else {
+      throw new Error(`Unknown error: ${error.message}`);
     }
   }
 };
