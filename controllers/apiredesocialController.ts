@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { APIRedeSocial } from '../models/apiredesocial';
+import { APIRedeSocial } from '../models/apiredesocialModel';
 
 export class APIRedeSocialController {
   public async getAllAPIRedeSocial(req: Request, res: Response) {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UsuarioAPIRedeSocialController } from '../controllers/usuario_api';
+import { UsuarioAPIRedeSocialController } from '../controllers/usuario_apiController';
 
 const usuarioAPIRedeSocialRouter = Router();
 const usuarioAPIRedeSocialController = new UsuarioAPIRedeSocialController();

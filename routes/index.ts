@@ -1,7 +1,7 @@
 import express, { Router } from "express";
-import users from "./user";
-import posts from "./post";
-import redes from "./apiredesocial";
+import users from "./userRoutes";
+import posts from "./postRoutes";
+import redes from "./apiredesocialRoutes";
 import usuarioAPIRedeSocialRouter from "./usuario_api";
 
 

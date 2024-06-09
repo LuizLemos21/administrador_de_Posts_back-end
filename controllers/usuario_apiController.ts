@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UsuarioAPIRedeSocial } from '../models/usuario_api';
+import { UsuarioAPIRedeSocial } from '../models/usuario_apiModel';
 
 export class UsuarioAPIRedeSocialController {
   public async getAll(req: Request, res: Response) {

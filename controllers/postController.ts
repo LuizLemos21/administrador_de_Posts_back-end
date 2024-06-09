@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Post } from '../models/post'; 
+import { Post } from '../models/postModel'; 
 import { postToFacebook } from '../services/facebookService';
 import { postToTwitter } from '../services/twitterService';
 import { postToLinkedIn } from '../services/linkedinService';
@@ -19,8 +19,30 @@ export class PostController {
       }
     }
   }
+  
 
-  public async createPost(req: Request, res: Response): Promise<void> {
+
+  public async createPost(req: Request, res: Response) {
+    try {
+      const { conteudo, dataagendamento, likes, comentarios, favoritacoes, compartilhamentos, userid } = req.body;
+      console.log ("assinou2");
+      const post = await Post.create({
+        conteudo,
+        dataagendamento, likes, comentarios, favoritacoes, compartilhamentos,
+        userid
+      });
+
+      res.status(201).json(post);
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(500).json({ error: err.message });
+      } else {
+        res.status(500).json({ error: 'An unknown error occurred.' });
+      }
+    }
+  }
+
+  public async publishPost(req: Request, res: Response): Promise<void> {
     const { message, facebookAccessToken, twitterAccessToken, linkedinAccessToken, linkedInPersonURN } = req.body;
 
     try {
@@ -108,6 +130,21 @@ export class PostController {
             res.status(500).json({ error: "An unknown error occurred." });
         }
     }
+}
+
+public async getPostsByUserId(req: Request, res: Response) {
+  const userid = req.params.userId;
+
+  try {
+    const posts = await Post.findAll({ where: { userid } });
+    res.json(posts);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: 'An unknown error occurred.' });
+    }
+  }
 }
 
 }

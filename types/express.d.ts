@@ -1,10 +1,8 @@
 // types/express.d.ts
 import { JwtPayload } from 'jsonwebtoken';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: string | JwtPayload; // Adjust the type based on what `jwt.verify` returns
-    }
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: string | JwtPayload; // Adjust based on your jwt.verify return type
   }
 }

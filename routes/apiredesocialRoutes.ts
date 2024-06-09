@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { APIRedeSocialController } from '../controllers/apiredesocial';
+import { APIRedeSocialController } from '../controllers/apiredesocialController';
 
 const apiRedeSocialRouter = Router();
 const apiRedeSocialController = new APIRedeSocialController();

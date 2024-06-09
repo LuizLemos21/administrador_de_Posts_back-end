@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../config/sequelize'; // Adjust the import according to your setup
+import { sequelize } from '../config/sequelize';
 
 export class Post extends Model {
   public id!: number;
@@ -10,7 +10,6 @@ export class Post extends Model {
   public favoritacoes!: number;
   public compartilhamentos!: number;
   public userid!: number;
-  public dashboardid!: number;
 }
 
 Post.init({
@@ -58,11 +57,8 @@ Post.init({
     onUpdate: 'NO ACTION',
     onDelete: 'NO ACTION',
   },
-
 }, {
   sequelize,
   tableName: 'post',
-  modelName: 'Post',
   timestamps: false,
 });
-

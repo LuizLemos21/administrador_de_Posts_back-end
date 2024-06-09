@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../config/sequelize';
-import { User } from './user';
-import { APIRedeSocial } from './apiredesocial';
+import { User } from './userModel';
+import { APIRedeSocial } from './apiredesocialModel';
 
 export class UsuarioAPIRedeSocial extends Model {
   public usuarioId!: number;

@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import { UserController } from '../controllers/user';
-import { AuthController } from '../controllers/auth';
-import { authMiddleware } from '../middlewares/auth';
+import { UserController } from '../controllers/userController';
+import { AuthController } from '../controllers/authController';
+import { PostController } from '../controllers/postController'; 
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 const users = Router();
 const userController = new UserController();
 const authController = new AuthController();
-
+const postController = new PostController(); 
 // User CRUD routes
 users.get('/users', userController.getAllUsers);
 users.post('/user', userController.createUser);
@@ -21,5 +22,7 @@ users.post('/login', authController.login);
 users.get('/protected', authMiddleware, (req, res) => {
   res.json({ message: "This is a protected route." });
 });
+
+// Add the route to get posts by user ID
 
 export default users;

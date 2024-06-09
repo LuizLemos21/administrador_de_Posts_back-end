@@ -1,5 +1,6 @@
+// controllers/auth.ts
 import { Request, Response } from 'express';
-import { User } from '../models/user';
+import { User } from '../models/userModel';
 import jwt from 'jsonwebtoken';
 
 export class AuthController {
@@ -15,12 +16,12 @@ export class AuthController {
 
       const token = jwt.sign({ id: user.id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
 
-      res.json({ message: 'Login successful', token });
+      res.json({ message: 'Login successful', token, user });
     } catch (err) {
       if (err instanceof Error){
-       res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message });
       } else {
-        res.status(500).json({ error: 'An unknown error has occured' });
+        res.status(500).json({ error: 'An unknown error has occurred' });
       }
     }
   }

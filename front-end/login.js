@@ -1,3 +1,4 @@
+// login.js
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
     event.preventDefault();
     const email = document.getElementById('email').value;
@@ -24,8 +25,4 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     } catch (error) {
         document.getElementById('loginMessage').innerText = 'An error occurred. Please try again.';
     }
-});
-
-document.getElementById('registerButton').addEventListener('click', function() {
-    window.location.href = 'register.html';
 });

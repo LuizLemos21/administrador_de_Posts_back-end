@@ -5,33 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheet.css">
     <title>Postmanager</title>
+    <style>
+        .post-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .countdown {
+            font-size: 14px;
+            color: gray;
+        }
+        .post-actions {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Add gap to separate elements */
+        }
+        .post-actions label {
+            margin-right: 10px;
+        }
+        .post-actions button {
+            margin-right: 10px; /* Adjusted margin for both buttons */
+            padding: 5px 10px;
+            cursor: pointer;
+}
+
+        .delete-button {
+            background: url('img/red-trash-can-icon.png') no-repeat center center;
+            background-size: contain;
+            width: 24px;
+            height: 24px;
+            border: none;
+            cursor: pointer;
+            margin-left: auto;
+        }
+    </style>
 </head>
 <body>
     <h1>Postmanager</h1>
-
-    <h2>Create User</h2>
-    <form id="userForm">
-        <input type="text" id="userName" placeholder="Enter user username">
-        <input type="email" id="userEmail" placeholder="Enter user email">
-        <input type="password" id="userPassword" placeholder="Enter password">
-        <button type="submit">Create User</button>
-    </form>
-
-    <h2>Users List</h2>
-    <ul id="usersList"></ul>
+    <h2 id="greeting">Olá!</h2>
 
     <h2>Create Post</h2>
     <form id="postForm">
         <textarea id="postContent" placeholder="Enter post content"></textarea>
         Data de Publicação: <input type="datetime-local" id="postSchedule" placeholder="Schedule Date">
-        <input type="number" id="userId" placeholder="Enter user ID for post">
         <button type="submit">Create Post</button>
     </form>
-    
 
-    <h2>Posts List</h2>
+    <h2>Post Dashboard</h2>
     <ul id="postsList"></ul>
-
 
     <script src="app.js"></script>
 </body>
