@@ -17,6 +17,7 @@ export class APIRedeSocialController {
 
   public async storeUserData(req: Request, res: Response){
     try {
+<<<<<<< HEAD
       const { userId } = req.params;
       const { username, endpoint, accessToken, socialNetwork } = req.body;
       // Assuming you have a User model and a method to update user data
@@ -35,13 +36,26 @@ export class APIRedeSocialController {
       if (error instanceof Error) {
         // Now TypeScript knows that 'err' is an Error object
         res.status(500).json({ error:   error.message });
+=======
+      const apiRedeSocial = await APIRedeSocial.create(req.body);
+      res.status(201).json(apiRedeSocial);
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(500).json({ error: err.message });
+>>>>>>> parent of eadc297 (integration 2)
       } else {
         // You can add some generic error handling here
         res.status(500).json({ error: 'An unknown error occurred.' });
+<<<<<<< HEAD
       }    }
   };
   
   
+=======
+      }
+    }
+  }
+>>>>>>> parent of eadc297 (integration 2)
 
   public async updateAPIRedeSocial(req: Request, res: Response) {
     try {
