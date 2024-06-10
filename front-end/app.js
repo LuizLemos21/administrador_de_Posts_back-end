@@ -14,31 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const name = document.getElementById('socialName').value;
         const network = document.getElementById('socialNetwork').value;
         const endpoint = document.getElementById('socialEndpoint').value;
-        const userId = localStorage.getItem('userId'); // Retrieve the user ID from local storage
-        const username = localStorage.getItem('userName'); // Retrieve the username from local storage
-    
-        fetch(`http://localhost:3000/api/${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                endpoint: endpoint,
-                socialNetwork: network,
-                userId: userId
-            })
-        }).then(response => {
-            if (response.ok) {
-                alert(`${network} linked successfully!`);
-            } else {
-                alert('Failed to link social network.');
-            }
-        }).catch(error => {
-            alert('An error occurred. Please try again.');
-        });
+        const userId = document.getElementById('userId').value;
+        const accessToken = document.getElementById('accessToken').value;
+
+        linkedSocialNetworks[network] = { name, endpoint, userId, accessToken };
+        localStorage.setItem('linkedSocialNetworks', JSON.stringify(linkedSocialNetworks));
+        alert(`${network} linked successfully!`);
     });
-    
 
     document.getElementById('postForm').addEventListener('submit', async function(event) {
         console.log("Creating post...");

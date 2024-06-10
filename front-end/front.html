@@ -48,10 +48,24 @@
     <h2 id="greeting">Olá!</h2>
     <div id="linkSocialNetwork">
         <h2>Link Social Network</h2>
-        <button id="linkTwitter">Link Twitter</button>
-        <button id="linkFacebook">Link Facebook</button>
-        <button id="linkLinkedIn">Link LinkedIn</button>
-
+        <form id="linkForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required><br>
+          <label for="socialNetwork">Social Network:</label>
+          <select id="socialNetwork" name="socialNetwork" required>
+            <option value="Facebook">Facebook</option>
+            <option value="Twitter">Twitter</option>
+            <option value="Instagram">Instagram</option>
+            <!-- Add other social networks as options -->
+          </select><br>
+          <label for="endpoint">Endpoint:</label>
+          <input type="text" id="endpoint" name="endpoint" required><br>
+          <label for="userId">User ID:</label>
+          <input type="number" id="userId" name="userId" required><br>
+          <label for="accessToken">Access Token:</label>
+          <input type="text" id="accessToken" name="accessToken" required><br>
+          <button type="submit">Link</button>
+        </form>
       </div>
       
       <script>

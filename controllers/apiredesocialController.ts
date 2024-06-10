@@ -19,6 +19,7 @@ export class APIRedeSocialController {
     try {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       const { userId } = req.params;
       const { username, endpoint, accessToken, socialNetwork } = req.body;
       // Assuming you have a User model and a method to update user data
@@ -40,6 +41,8 @@ export class APIRedeSocialController {
 =======
 =======
 >>>>>>> parent of eadc297 (integration 2)
+=======
+>>>>>>> parent of eadc297 (integration 2)
       const apiRedeSocial = await APIRedeSocial.create(req.body);
       res.status(201).json(apiRedeSocial);
     } catch (err) {
@@ -59,6 +62,9 @@ export class APIRedeSocialController {
     }
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of eadc297 (integration 2)
+=======
 >>>>>>> parent of eadc297 (integration 2)
 =======
 >>>>>>> parent of eadc297 (integration 2)

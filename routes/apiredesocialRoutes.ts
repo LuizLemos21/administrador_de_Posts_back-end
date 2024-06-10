@@ -5,15 +5,7 @@ const apiRedeSocialRouter = Router();
 const apiRedeSocialController = new APIRedeSocialController();
 
 apiRedeSocialRouter.get('/apiredesocial', apiRedeSocialController.getAllAPIRedeSocial);
-<<<<<<< HEAD
-<<<<<<< HEAD
-apiRedeSocialRouter.post('/api/:userId', apiRedeSocialController.storeUserData);
-=======
-apiRedeSocialRouter.post('/apiredesocial', apiRedeSocialController.createAPIRedeSocial);
->>>>>>> parent of eadc297 (integration 2)
-=======
-apiRedeSocialRouter.post('/apiredesocial', apiRedeSocialController.createAPIRedeSocial);
->>>>>>> parent of eadc297 (integration 2)
+apiRedeSocialRouter.post('/api/:userId', apiRedeSocialController.createAPIRedeSocial);
 apiRedeSocialRouter.put('/apiredesocial/:id', apiRedeSocialController.updateAPIRedeSocial);
 apiRedeSocialRouter.patch('/apiredesocial/:id', apiRedeSocialController.patchAPIRedeSocial);
 apiRedeSocialRouter.delete('/apiredesocial/:id', apiRedeSocialController.deleteAPIRedeSocial);
