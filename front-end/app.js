@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-<<<<<<< HEAD
     const linkedSocialNetworks = JSON.parse(localStorage.getItem('linkedSocialNetworks')) || {};
 
     document.getElementById('linkForm').addEventListener('submit', function(event) {
@@ -41,8 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
 
-=======
->>>>>>> parent of eadc297 (integration 2)
     document.getElementById('postForm').addEventListener('submit', async function(event) {
         console.log("Creating post...");
 
@@ -212,3 +209,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadUserPosts();
 });
+S
