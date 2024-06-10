@@ -7,6 +7,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    const linkedSocialNetworks = JSON.parse(localStorage.getItem('linkedSocialNetworks')) || {};
+
+    document.getElementById('linkForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('socialName').value;
+        const network = document.getElementById('socialNetwork').value;
+        const endpoint = document.getElementById('socialEndpoint').value;
+        const userId = document.getElementById('userId').value;
+        const accessToken = document.getElementById('accessToken').value;
+
+        linkedSocialNetworks[network] = { name, endpoint, userId, accessToken };
+        localStorage.setItem('linkedSocialNetworks', JSON.stringify(linkedSocialNetworks));
+        alert(`${network} linked successfully!`);
+    });
+
     document.getElementById('postForm').addEventListener('submit', async function(event) {
         console.log("Creating post...");
 
@@ -15,6 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const schedule = document.getElementById('postSchedule').value;
         const userId = localStorage.getItem('userId'); // Retrieve the user ID from local storage
         const token = localStorage.getItem('token'); // Retrieve the token from local storage
+
+        // Convert local datetime to UTC
+        const localDate = new Date(schedule);
+        const utcDate = new Date(localDate.getTime() + (localDate.getTimezoneOffset() * 6000));
 
         try {
             const response = await fetch('http://localhost:3000/post', {
@@ -25,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({
                     conteudo: content,
-                    dataagendamento: schedule,
+                    dataagendamento: utcDate.toISOString(),
                     likes: 0,
                     comentarios: 0,
                     favoritacoes: 0,
@@ -69,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const countdown = document.createElement('div');
                     countdown.className = 'countdown';
                     updateCountdown(countdown, new Date(post.dataagendamento));
-                    setInterval(() => updateCountdown(countdown, new Date(post.dataagendamento)), 1000);
+                    const intervalId = setInterval(() => updateCountdown(countdown, new Date(post.dataagendamento)), 1000);
 
                     listItem.innerHTML = `
                         <p>${post.conteudo}</p>
@@ -84,37 +103,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     listItem.insertBefore(countdown, listItem.querySelector('.post-actions'));
                     postsList.appendChild(listItem);
+
+                    // Automatically publish post when countdown reaches zero
+                    setTimeout(() => {
+                        clearInterval(intervalId);
+                        publishPost(post.id, getSelectedPlatformsAndTokens(listItem), token);
+                    }, new Date(post.dataagendamento) - new Date());
                 });
 
                 document.querySelectorAll('.publishButton').forEach(button => {
                     button.addEventListener('click', async function(event) {
                         const postId = event.target.getAttribute('data-post-id');
-                        const selectedPlatforms = Array.from(button.closest('.post-actions').querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+                        const { selectedPlatforms, accessTokens } = getSelectedPlatformsAndTokens(button.closest('.post-actions'));
 
                         if (selectedPlatforms.length === 0) {
                             alert('Please select at least one platform to publish');
                             return;
                         }
 
-                        try {
-                            const response = await fetch(`http://localhost:3000/posts/${postId}/publish`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                body: JSON.stringify({ platforms: selectedPlatforms })
-                            });
-
-                            if (response.ok) {
-                                alert('Post published successfully');
-                            } else {
-                                const data = await response.json();
-                                alert(data.message || 'Failed to publish post');
-                            }
-                        } catch (error) {
-                            alert('An error occurred. Please try again.');
-                        }
+                        publishPost(postId, selectedPlatforms, accessTokens, token);
                     });
                 });
 
@@ -151,6 +158,38 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 const data = await response.json();
                 alert(data.message || 'Failed to load posts');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    }
+
+    function getSelectedPlatformsAndTokens(postActionsElement) {
+        const selectedPlatforms = Array.from(postActionsElement.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+        const accessTokens = selectedPlatforms.reduce((tokens, platform) => {
+            tokens[platform] = linkedSocialNetworks[platform]?.accessToken;
+            return tokens;
+        }, {});
+
+        return { selectedPlatforms, accessTokens };
+    }
+
+    async function publishPost(postId, selectedPlatforms, accessTokens, token) {
+        try {
+            const response = await fetch(`http://localhost:3000/posts/${postId}/publish`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ platforms: selectedPlatforms, accessTokens })
+            });
+
+            if (response.ok) {
+                alert('Post published successfully');
+            } else {
+                const data = await response.json();
+                alert(data.message || 'Failed to publish post');
             }
         } catch (error) {
             alert('An error occurred. Please try again.');

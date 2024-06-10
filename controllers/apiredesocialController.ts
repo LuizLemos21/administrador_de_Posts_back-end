@@ -17,7 +17,12 @@ export class APIRedeSocialController {
 
   public async createAPIRedeSocial(req: Request, res: Response) {
     try {
-      const apiRedeSocial = await APIRedeSocial.create(req.body);
+      const userId = parseInt(req.params.userId); // Extract userId from req.params
+      const apiRedeSocialData = {
+        ...req.body,
+        userId: userId, // Set userId for the APIRedeSocial instance
+      };
+      const apiRedeSocial = await APIRedeSocial.create(apiRedeSocialData);
       res.status(201).json(apiRedeSocial);
     } catch (err) {
       if (err instanceof Error) {
@@ -27,6 +32,7 @@ export class APIRedeSocialController {
       }
     }
   }
+  
 
   public async updateAPIRedeSocial(req: Request, res: Response) {
     try {

@@ -43,27 +43,26 @@ export class PostController {
   }
 
   public async publishPost(req: Request, res: Response): Promise<void> {
-    const { message, facebookAccessToken, twitterAccessToken, linkedinAccessToken, linkedInPersonURN } = req.body;
+    const { message, accessTokens } = req.body;
 
     try {
-      if (facebookAccessToken) {
-        await postToFacebook(facebookAccessToken, message);
-      }
-      if (twitterAccessToken) {
-        await postToTwitter(twitterAccessToken, message);
-      }
-      if (linkedinAccessToken) {
-        await postToLinkedIn(linkedinAccessToken, message, linkedInPersonURN );
-      }
-      res.status(200).send('Post created successfully on all platforms');
+        if (accessTokens.facebook) {
+            await postToFacebook(accessTokens.facebook, message);
+        }
+        if (accessTokens.twitter) {
+            await postToTwitter(accessTokens.twitter, message);
+        }
+        if (accessTokens.linkedin) {
+            const linkedInPersonURN = 'your-linkedin-person-urn'; // Replace with your LinkedIn person URN
+            await postToLinkedIn(accessTokens.linkedin, message, linkedInPersonURN);
+        }
+        res.status(200).send('Post created successfully on all platforms');
     } catch (err) {
-      if (err instanceof Error) {
-        res.status(500).send(`Error creating post: ${err.message}`);
-      }
+        if (err instanceof Error) {
+            res.status(500).send(`Error creating post: ${err.message}`);
+        }
     }
-  }
-
-
+}
   public async updatePost(req: Request, res: Response) {
     try {
       const updatedPost = await Post.update(req.body, {
