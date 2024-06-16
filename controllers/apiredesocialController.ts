@@ -15,59 +15,39 @@ export class APIRedeSocialController {
     }
   }
 
-  public async storeUserData(req: Request, res: Response){
+  public async storeUserData(req: Request, res: Response) {
     try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      const { userId } = req.params;
-      const { username, endpoint, accessToken, socialNetwork } = req.body;
-      // Assuming you have a User model and a method to update user data
-      await APIRedeSocial.create(
-        {
-            nome: username,
-            endpoint: endpoint,
-            userId: userId,
-            accessToken: accessToken,
-            socialNetwork: socialNetwork
-          
-        }
-      );
+      const { userId, username, socialNetwork, accessToken } = req.body;
+
+      const endpoints: { [key: string]: string } = {
+        twitter: 'https://api.twitter.com/2/tweets',
+        facebook: 'https://graph.facebook.com/v12.0/me/feed',
+        linkedin: 'https://api.linkedin.com/v2/shares'
+      };
+      
+      const endpoint = endpoints[socialNetwork.toLowerCase()];
+      
+      if (!endpoint) {
+        return res.status(400).json({ error: 'Invalid social network' });
+      }
+
+      await APIRedeSocial.create({
+        nome: username,
+        endpoint: endpoint,
+        userId: userId,
+        accessToken: accessToken,
+        socialNetwork: socialNetwork
+      });
+
       res.status(200).send('User data stored successfully');
     } catch (error) {
       if (error instanceof Error) {
-        // Now TypeScript knows that 'err' is an Error object
-        res.status(500).json({ error:   error.message });
-=======
-=======
->>>>>>> parent of eadc297 (integration 2)
-=======
->>>>>>> parent of eadc297 (integration 2)
-      const apiRedeSocial = await APIRedeSocial.create(req.body);
-      res.status(201).json(apiRedeSocial);
-    } catch (err) {
-      if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
->>>>>>> parent of eadc297 (integration 2)
+        res.status(500).json({ error: error.message });
       } else {
-        // You can add some generic error handling here
         res.status(500).json({ error: 'An unknown error occurred.' });
-<<<<<<< HEAD
-      }    }
-  };
-  
-  
-=======
       }
     }
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of eadc297 (integration 2)
-=======
->>>>>>> parent of eadc297 (integration 2)
-=======
->>>>>>> parent of eadc297 (integration 2)
 
   public async updateAPIRedeSocial(req: Request, res: Response) {
     try {

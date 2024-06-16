@@ -1,27 +1,31 @@
 import passport from 'passport';
-import { Strategy as TwitterStrategy } from 'passport-twitter';
+import { Strategy as FacebookStrategy, Profile } from 'passport-facebook';
 import axios from 'axios';
 
-passport.use(new TwitterStrategy({
-    consumerKey: process.env.TWITTER_CONSUMER_KEY,
-    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "http://localhost:3000/auth/twitter/callback"
-  },
-  function(token, tokenSecret, profile, done) {
-    const userId = profile.id; // Use profile.id as userId or your own logic
-    const username = profile.username; // Use profile.username or your own logic
-    const endpoint = 'https://api.twitter.com'; // Twitter API endpoint
+const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID as string;
+const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET as string;
 
-    axios.post(`http://localhost:3000/api/${userId}`, {
-      username: username,
-      endpoint: endpoint,
-      userId: userId,
-      accessToken: token,
-      socialNetwork: 'Twitter'
-    }).then(() => {
-      return done(null, { profile, token, tokenSecret });
-    }).catch((error) => {
+passport.use(new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+  },
+  async function(accessToken: string, refreshToken: string, profile: Profile, done: (error: any, user?: any) => void) {
+    const userId = profile.id;
+    const username = localStorage.getItem('username');
+    const endpoint = localStorage.getItem('socialEndpoint');
+    const socialNetwork = 'facebook';
+    try {
+      await axios.post(`http://localhost:3000/api/${userId}`, {
+        username: username,
+        endpoint: endpoint,
+        userId: userId,
+        accessToken: accessToken,
+        socialNetwork: socialNetwork
+      });
+      return done(null, { profile, accessToken });
+    } catch (error) {
       return done(error);
-    });
+    }
   }
 ));

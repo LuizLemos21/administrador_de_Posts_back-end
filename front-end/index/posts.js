@@ -1,72 +1,11 @@
+// posts.js
 document.addEventListener('DOMContentLoaded', function() {
-    const userName = localStorage.getItem('userName');
-    if (userName) {
-      document.getElementById('greeting').innerText = `Hello ${userName}!`;
-    } else {
-      window.location.href = 'login.html'; // Redirect to login if no username is found
-      return;
-    }
-  
-    document.getElementById('linkTwitter').addEventListener('click', async function() {
-        try {
-          const response = await fetch(`http://localhost:3000/auth/twitter`);
-          const text = await response.text(); // Read response as text
-      
-          if (response.ok) {
-            alert('Contacting twitter...');
-          } else {
-            try {
-              const data = JSON.parse(text); // Try to parse JSON
-              alert(data.message || 'Failed to contact twitter...');
-            } catch (e) {
-              alert(`Unexpected response: ${text}`); // If not JSON, show the response text
-            }
-          }
-        } catch (error) {
-          alert(error.message);
-        }
-      });
-      
-  
-    document.getElementById('linkFacebook').addEventListener('click', async function() {
-        try{
-            const response = await fetch(`http://localhost:3000/auth/facebook`);
-            if (response.ok) {
-                alert('Contacting facebook...');
-            } else {
-                const data = await response.json();
-                alert(data.message || 'Failed to contact facebook...');
-            }    
-        } catch (error){
-            alert(error.message);
-        }
-    });
-  
-    document.getElementById('linkLinkedIn').addEventListener('click', async function() {
-        try{
-            const response = await fetch(`http://localhost:3000/auth/linkedin`);
-            if (response.ok) {
-                alert('Contacting linkedin...');
-            } else {
-                const data = await response.json();
-                alert(data.message || 'Failed to contact linkedin...');
-            }    
-        } catch (error){
-            alert(error.message);
-        }
-    });
-    
-    
-
-
     document.getElementById('postForm').addEventListener('submit', async function(event) {
-        console.log("Creating post...");
-
         event.preventDefault();
         const content = document.getElementById('postContent').value;
         const schedule = document.getElementById('postSchedule').value;
-        const userId = localStorage.getItem('userId'); // Retrieve the user ID from local storage
-        const token = localStorage.getItem('token'); // Retrieve the token from local storage
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
 
         try {
             const response = await fetch('http://localhost:3000/post', {
@@ -88,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 alert('Post created successfully');
-                loadUserPosts(); // Function to reload posts
+                loadUserPosts();
             } else {
                 const data = await response.json();
                 alert(data.message || 'Failed to create post');
@@ -190,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             if (response.ok) {
                                 alert('Post deleted successfully');
-                                loadUserPosts(); // Reload posts after deletion
+                                loadUserPosts();
                             } else {
                                 const data = await response.json();
                                 alert(data.message || 'Failed to delete post');
@@ -207,23 +146,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             alert('An error occurred. Please try again.');
         }
-    }
-
-    function updateCountdown(element, targetDate) {
-        const now = new Date();
-        const diff = targetDate - now;
-
-        if (diff <= 0) {
-            element.innerText = 'Time to publish!';
-            return;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        element.innerText = `Time left: ${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
     loadUserPosts();

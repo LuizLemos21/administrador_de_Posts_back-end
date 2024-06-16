@@ -1,10 +1,13 @@
 import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../config/sequelize'; // Ajuste o caminho de acordo com a sua configuração
+import { sequelize } from '../config/sequelize'; // Adjust the path as per your configuration
 
 export class APIRedeSocial extends Model {
   public id!: number;
+  public userId!: string;
   public nome!: string;
   public endpoint!: string;
+  public accessToken!: string;
+  public socialNetwork!: string;
 }
 
 APIRedeSocial.init({
@@ -14,6 +17,10 @@ APIRedeSocial.init({
     primaryKey: true,
     autoIncrement: true,
   },
+  userId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   nome: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -22,6 +29,14 @@ APIRedeSocial.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
+  accessToken: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  socialNetwork: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 }, {
   sequelize,
   tableName: 'apiredesocial',

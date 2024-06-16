@@ -9,6 +9,7 @@ export class User extends Model {
   public senha!: string;
 
   public validPassword(password: string): boolean {
+    console.log('Comparing passwords:', password, this.senha);
     return bcrypt.compareSync(password, this.senha);
   }
 }

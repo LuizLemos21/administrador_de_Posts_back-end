@@ -1,28 +1,32 @@
 import passport from 'passport';
-import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
+import { Strategy as LinkedInStrategy, Profile } from 'passport-linkedin-oauth2';
 import axios from 'axios';
 
+const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID as string;
+const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET as string;
+
 passport.use(new LinkedInStrategy({
-    clientID: process.env.LINKEDIN_CLIENT_ID,
-    clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+    clientID: LINKEDIN_CLIENT_ID,
+    clientSecret: LINKEDIN_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/linkedin/callback",
     scope: ['r_emailaddress', 'r_liteprofile', 'w_member_social']
   },
-  function(accessToken, refreshToken, profile, done) {
-    const userId = profile.id; // Use profile.id as userId or your own logic
-    const username = profile.displayName; // Use profile.displayName or your own logic
-    const endpoint = 'https://api.linkedin.com'; // LinkedIn API endpoint
-
-    axios.post(`http://localhost:3000/api/${userId}`, {
-      username: username,
-      endpoint: endpoint,
-      userId: userId,
-      accessToken: accessToken,
-      socialNetwork: 'LinkedIn'
-    }).then(() => {
+  async function(accessToken: string, refreshToken: string, profile: Profile, done: (error: any, user?: any) => void) {
+    const userId = profile.id;
+    const username = localStorage.getItem('username');
+    const endpoint = localStorage.getItem('socialEndpoint');
+    const socialNetwork = 'linkedin';
+    try {
+      await axios.post(`http://localhost:3000/api/${userId}`, {
+        username: username,
+        endpoint: endpoint,
+        userId: userId,
+        accessToken: accessToken,
+        socialNetwork: socialNetwork
+      });
       return done(null, { profile, accessToken });
-    }).catch((error) => {
+    } catch (error) {
       return done(error);
-    });
+    }
   }
 ));
