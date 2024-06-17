@@ -1,24 +1,9 @@
 // auth.js
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('linkTwitter').addEventListener('click', async function() {
-        try {
-            const response = await fetch(`http://localhost:3000/auth/twitter`);
-            const text = await response.text();
-
-            if (response.ok) {
-                alert('Contacting twitter...');
-            } else {
-                try {
-                    const data = JSON.parse(text);
-                    alert(data.message || 'Failed to contact twitter...');
-                } catch (e) {
-                    alert(`Unexpected response: ${text}`);
-                }
-            }
-        } catch (error) {
-            alert(error.message);
-        }
+    document.getElementById('linkTwitter').addEventListener('click', function() {
+        window.location.href = 'http://localhost:3000/auth/twitter';
     });
+    
 
     document.getElementById('linkFacebook').addEventListener('click', async function() {
         try {

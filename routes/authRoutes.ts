@@ -5,6 +5,7 @@ import { APIRedeSocialController } from '../controllers/apiredesocialController'
 const router = express.Router();
 const apiRedeSocialController = new APIRedeSocialController();
 
+// Type guard to assert req.user is of the expected type
 function isUser(user: any): user is { id: string; username: string; token: string } {
     return user && typeof user.id === 'string' && typeof user.username === 'string' && typeof user.token === 'string';
   }
