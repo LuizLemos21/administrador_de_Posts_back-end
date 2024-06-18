@@ -11,25 +11,25 @@ function isUser(user: any): user is { id: string; username: string; token: strin
   }
   
   // Endpoint to get Twitter auth URL
-  router.get('/auth/twitter', (req, res, next) => {
-    passport.authenticate('twitter')(req, res, next);
-  });
+  router.get('/auth/twitter', passport.authenticate('twitter'));
   
   // Endpoint to handle Twitter callback and redirect
   router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/' }), (req, res) => {
     console.log("Twitter callback called");
     if (isUser(req.user)) {
-      const userData = {
-        userId: req.user.id,
-        username: req.user.username,
-        accessToken: req.user.token,
-        socialNetwork: 'twitter'
-      };
-      res.redirect(`/api/storeUserData?userId=${userData.userId}&username=${userData.username}&accessToken=${userData.accessToken}&socialNetwork=${userData.socialNetwork}`);
+        const userData = {
+            userId: req.user.id,
+            username: req.user.username,
+            accessToken: req.user.token,
+            socialNetwork: 'twitter'
+        };
+        res.redirect(`/api/storeUserData?userId=${userData.userId}&username=${userData.username}&accessToken=${userData.accessToken}&socialNetwork=${userData.socialNetwork}`);
     } else {
-      res.status(500).send('User data not available');
+        res.status(500).send('User data not available');
     }
-  });
+});
+
+
 
 // Endpoint to get Facebook auth URL
 router.get('/auth/facebook', passport.authenticate('facebook'));

@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as TwitterStrategy, Profile } from 'passport-twitter';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,16 +14,15 @@ passport.use(new TwitterStrategy({
   callbackURL: "http://localhost:3000/auth/twitter/callback"
 },
 async function(token: string, tokenSecret: string, profile: Profile, done: (error: any, user?: any) => void) {
+  console.log("Profile:", profile);
+  console.log("Token:", token);
+  console.log("Token Secret:", tokenSecret);
+
+  const userId = profile.id;
+  const username = localStorage.getItem('username');
+  const endpoint = localStorage.getItem('socialEndpoint');
+  const socialNetwork = 'twitter';
   try {
-    console.log("Profile:", profile);
-    console.log("Token:", token);
-    console.log("Token Secret:", tokenSecret);
-
-    const userId = profile.id;
-    const username = localStorage.getItem('username');
-    const endpoint = localStorage.getItem('socialEndpoint');
-    const socialNetwork = 'twitter';
-
     const response = await axios.post(`http://localhost:3000/api/${userId}`, {
       username: username,
       endpoint: endpoint,
@@ -35,6 +34,10 @@ async function(token: string, tokenSecret: string, profile: Profile, done: (erro
     return done(null, { profile, token, tokenSecret });
   } catch (error) {
     console.error("API Error:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("Error Response:", error.response?.data);
+    }
     return done(error);
   }
-}));
+}
+));

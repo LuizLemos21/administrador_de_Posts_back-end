@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter Callback</title>
+</head>
+<body>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
+    const username = params.get('username');
+    const accessToken = params.get('accessToken');
+    const socialNetwork = params.get('socialNetwork');
+
+    if (userId && username && accessToken && socialNetwork) {
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('username', username);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('socialNetwork', socialNetwork);
+      alert('Twitter account linked successfully!');
+    } else {
+      alert('Failed to link Twitter account.');
+    }
+
+    window.location.href = '/'; // Redirect to home or another appropriate page
+  </script>
+</body>
+</html>
