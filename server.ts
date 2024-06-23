@@ -10,10 +10,29 @@ import './strategies/facebookStrategy';
 import './strategies/linkedinStrategy';
 import bodyParser from 'body-parser';
 
+console.log('Main server file loaded'); 
+
 const morgan = require('morgan');
 
 
 const app = express();
+
+
+// Configure session middleware
+const secret = process.env.JWT_SECRET as string;
+app.use(session({
+  secret: secret, // Replace with your secret key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set secure to true if using HTTPS
+}));
+
+// Initialize Passport.js
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
 const port = 3000;
 const cors = require('cors');
 app.use(cors());  // This will enable CORS for all routes and origins

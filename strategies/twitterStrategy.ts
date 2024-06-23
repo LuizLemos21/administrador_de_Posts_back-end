@@ -1,6 +1,5 @@
 import passport from 'passport';
 import { Strategy as TwitterStrategy, Profile } from 'passport-twitter';
-import axios, { AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,33 +10,29 @@ const TWITTER_CONSUMER_SECRET = process.env.TWITTER_CONSUMER_SECRET as string;
 passport.use(new TwitterStrategy({
   consumerKey: TWITTER_CONSUMER_KEY,
   consumerSecret: TWITTER_CONSUMER_SECRET,
-  callbackURL: "http://localhost:3000/auth/twitter/callback"
+  callbackURL: "http://localhost:3000/auth/twitter/callback",
+  includeEmail: true
 },
-async function(token: string, tokenSecret: string, profile: Profile, done: (error: any, user?: any) => void) {
-  console.log("Profile:", profile);
-  console.log("Token:", token);
-  console.log("Token Secret:", tokenSecret);
-
-  const userId = profile.id;
-  const username = localStorage.getItem('username');
-  const endpoint = localStorage.getItem('socialEndpoint');
-  const socialNetwork = 'twitter';
+async (token: string, tokenSecret: string, profile: Profile, done: (error: any, user?: any) => void) => {
   try {
-    const response = await axios.post(`http://localhost:3000/api/${userId}`, {
-      username: username,
-      endpoint: endpoint,
-      userId: userId,
-      accessToken: token,
-      socialNetwork: socialNetwork
-    });
-    console.log("API Response:", response.data);
-    return done(null, { profile, token, tokenSecret });
+    const userId = profile.id;
+    const username = profile.username;
+    const socialNetwork = 'twitter';
+
+    const user = { id: userId, username, token, tokenSecret, profile };
+
+    // Here, instead of storing the user data immediately, 
+    // we'll pass it to the next middleware where it can be sent to the client.
+    return done(null, user);
   } catch (error) {
-    console.error("API Error:", error);
-    if (axios.isAxiosError(error)) {
-      console.error("Error Response:", error.response?.data);
-    }
     return done(error);
   }
-}
-));
+}));
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj: any, done) => {
+  done(null, obj);
+});

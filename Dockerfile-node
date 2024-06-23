@@ -1,0 +1,44 @@
+# Dockerfile-node
+
+# Use the official Node.js image as the base image
+FROM node:14
+
+# Create and set the working directory
+WORKDIR /app
+
+# Set npm to use GitHub Packages registry
+RUN npm config set registry https://npm.pkg.github.com/
+
+# Add authentication token for GitHub Packages
+# Replace YOUR_USERNAME and YOUR_AUTH_TOKEN with your actual GitHub username and token
+RUN echo "//npm.pkg.github.com/:_authToken=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" > ~/.npmrc
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --no-cache
+
+# Copy the rest of the application code
+COPY . .
+
+
+
+# Copy the environment variables file
+COPY .env .env
+
+# Build the TypeScript code
+RUN npm run build
+
+# Expose the application port
+EXPOSE 3000
+
+
+# Ensure 'dist' folder exists and has the compiled files
+RUN mkdir -p dist && ls -la dist
+
+# Expose the port your app runs on
+EXPOSE 3000
+
+# Command to run the application
+CMD ["npm", "start"]
