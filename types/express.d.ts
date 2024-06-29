@@ -6,3 +6,11 @@ declare module 'express-serve-static-core' {
     user?: string | JwtPayload; // Adjust based on your jwt.verify return type
   }
 }
+
+import 'express-session';
+
+declare module 'express-session' {
+  interface SessionData {
+    userId: string;
+  }
+}

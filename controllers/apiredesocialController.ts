@@ -17,7 +17,7 @@ export class APIRedeSocialController {
 
   public async storeUserData(req: Request, res: Response) {
     try {
-      const { userId, username, socialNetwork, accessToken } = req.body;
+      const { userid, username, socialNetwork, accessToken } = req.body;
 
       const endpoints: { [key: string]: string } = {
         twitter: 'https://api.twitter.com/2/tweets',
@@ -32,11 +32,11 @@ export class APIRedeSocialController {
       }
 
       await APIRedeSocial.create({
-        nome: username,
+        nome: username ,
         endpoint: endpoint,
-        userId: userId,
-        accessToken: accessToken,
-        socialNetwork: socialNetwork
+        userid: userid,
+        accesstoken: accessToken,
+        SocialNetwork: socialNetwork
       });
 
       res.status(200).send('User data stored successfully');

@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config();
-
+import cors from 'cors';
 import express from 'express';
 import router from './routes';
 import session from 'express-session';
@@ -11,18 +10,19 @@ import './strategies/linkedinStrategy';
 import './strategies/instagramStrategy';
 import bodyParser from 'body-parser';
 
+dotenv.config();
 console.log('Main server file loaded'); 
 
 const morgan = require('morgan');
-
-
 const app = express();
+
+
 
 
 // Configure session middleware
 const secret = process.env.JWT_SECRET as string;
 app.use(session({
-  secret: secret, // Replace with your secret key
+  secret: secret, 
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // Set secure to true if using HTTPS
@@ -34,14 +34,13 @@ app.use(passport.session());
 
 
 
+
 const port = 3000;
-const cors = require('cors');
 app.use(cors());  // This will enable CORS for all routes and origins
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(session({ secret: 'your_secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 

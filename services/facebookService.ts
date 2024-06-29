@@ -4,10 +4,10 @@ const FACEBOOK_GRAPH_API_URL = 'https://graph.facebook.com';
 
 export const postToFacebook = async (accessToken: string, message: string) => {
   const url = `${FACEBOOK_GRAPH_API_URL}/me/feed`;
-  const params = {
+  const params = JSON.stringify({
     access_token: accessToken,
     message: message,
-  };
+  });
 
   try {
     const response = await axios.post(url, null, { params });

@@ -6,7 +6,7 @@ export class APIRedeSocial extends Model {
   public userId!: string;
   public nome!: string;
   public endpoint!: string;
-  public accessToken!: string;
+  public accesstoken!: string;
   public socialNetwork!: string;
 }
 
@@ -17,7 +17,7 @@ APIRedeSocial.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  userId: {
+  userid: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -29,11 +29,11 @@ APIRedeSocial.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
-  accessToken: {
+  accesstoken: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  socialNetwork: {
+  SocialNetwork: {
     type: DataTypes.STRING,
     allowNull: false,
   }
