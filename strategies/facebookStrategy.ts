@@ -15,7 +15,6 @@ passport.use(new FacebookStrategy({
   profileFields: ['id', 'emails', 'name']
 },
 async (accessToken, refreshToken, profile, done) => {
-  console.log("Facebook Profile:", profile);
   try {
     const userId = profile.id;
     const username = profile.displayName;
@@ -30,21 +29,9 @@ async (accessToken, refreshToken, profile, done) => {
       accessToken,
       socialNetwork
     });
-    console.log("API Response:", response.data);
 
     return done(null, user);
   } catch (error) {
-    console.error("An error occurred while processing the Facebook login callback.");
-    if (axios.isAxiosError(error)) {
-      console.error("Axios error response data:", error.response?.data);
-      console.error("Axios error response status:", error.response?.status);
-      console.error("Axios error response headers:", error.response?.headers);
-    } else if (error instanceof Error) {
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
-    } else {
-      console.error("Unexpected error:", error);
-    }
     return done(error);
   }
 }));

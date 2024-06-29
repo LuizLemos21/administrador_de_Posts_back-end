@@ -21,8 +21,6 @@ async (token: string, tokenSecret: string, profile: Profile, done: (error: any, 
 
     const user = { id: userId, username, token, tokenSecret, profile };
 
-    // Here, instead of storing the user data immediately, 
-    // we'll pass it to the next middleware where it can be sent to the client.
     return done(null, user);
   } catch (error) {
     return done(error);

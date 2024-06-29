@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
       window.location.href = 'login.html'; // Redirect to login if no username is found
       return;
     }
-  
+
     document.getElementById('linkTwitter').addEventListener('click', async function() {
         try {
           const response = await fetch(`http://localhost:3000/auth/twitter`);
@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
           alert(error.message);
         }
       });
-      
-  
+
     document.getElementById('linkFacebook').addEventListener('click', async function() {
         try{
             const response = await fetch(`http://localhost:3000/auth/facebook`);
@@ -41,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(error.message);
         }
     });
-  
+
     document.getElementById('linkLinkedIn').addEventListener('click', async function() {
         try{
             const response = await fetch(`http://localhost:3000/auth/linkedin`);
@@ -55,9 +54,21 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(error.message);
         }
     });
-    
-    
 
+    // Adding Instagram authentication
+    document.getElementById('linkInstagram').addEventListener('click', async function() {
+        try {
+            const response = await fetch(`http://localhost:3000/auth/instagram`);
+            if (response.ok) {
+                alert('Contacting Instagram...');
+            } else {
+                const data = await response.json();
+                alert(data.message || 'Failed to contact Instagram...');
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    });
 
     document.getElementById('postForm').addEventListener('submit', async function(event) {
         console.log("Creating post...");
@@ -212,25 +223,25 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateCountdown(element, targetDate) {
         const now = new Date();
         const diff = targetDate - now;
-    
+
         // Adjust the countdown to end 3 hours earlier
         const adjustedTargetDate = new Date(targetDate);
         adjustedTargetDate.setHours(targetDate.getHours() - 3);
-    
+
         const adjustedDiff = adjustedTargetDate - now;
-    
+
         if (adjustedDiff <= 0) {
             element.innerText = 'Time to publish!';
             return;
         }
-    
+
         const days = Math.floor(adjustedDiff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((adjustedDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((adjustedDiff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((adjustedDiff % (1000 * 60)) / 1000);
-    
+
         element.innerText = `Time left: ${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
-    
+
     loadUserPosts();
 });

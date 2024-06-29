@@ -8,6 +8,7 @@ import passport from 'passport';
 import './strategies/twitterStrategy';
 import './strategies/facebookStrategy';
 import './strategies/linkedinStrategy';
+import './strategies/instagramStrategy';
 import bodyParser from 'body-parser';
 
 console.log('Main server file loaded'); 

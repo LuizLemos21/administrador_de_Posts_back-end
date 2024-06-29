@@ -14,11 +14,10 @@ const linkedInStrategyOptions: StrategyOptionWithRequest & { state: boolean } = 
   callbackURL: "http://localhost:3000/auth/linkedin/callback",
   scope: ['r_emailaddress', 'r_liteprofile'],
   passReqToCallback: true,
-  state: true // Adding state property here
+  state: true
 };
 
 const linkedInVerify: VerifyFunctionWithRequest = async (req, accessToken, refreshToken, profile, done) => {
-  console.log("LinkedIn Profile:", profile);
   try {
     const userId = profile.id;
     const username = profile.displayName;
@@ -33,21 +32,9 @@ const linkedInVerify: VerifyFunctionWithRequest = async (req, accessToken, refre
       accessToken,
       socialNetwork
     });
-    console.log("API Response:", response.data);
 
     return done(null, user);
   } catch (error) {
-    console.error("An error occurred while processing the LinkedIn login callback.");
-    if (axios.isAxiosError(error)) {
-      console.error("Axios error response data:", error.response?.data);
-      console.error("Axios error response status:", error.response?.status);
-      console.error("Axios error response headers:", error.response?.headers);
-    } else if (error instanceof Error) {
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
-    } else {
-      console.error("Unexpected error:", error);
-    }
     return done(error);
   }
 };

@@ -14,38 +14,44 @@ function isUser(user: any): user is { id: string; username: string; token: strin
     return user && typeof user.id === 'string' && typeof user.username === 'string' && typeof user.token === 'string';
   }
   
- // Endpoint to get Twitter auth URL
-router.get('/auth/twitter', passport.authenticate('twitter'));
-router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/' }), (req, res) => {
-  if (req.user) {
-    // Extract user data from req.user
-    const user = req.user as any;
-    const { token, tokenSecret } = user;
-    // Redirect to a frontend route with tokens in query params
-    res.redirect(`/auth/success?token=${token}&tokenSecret=${tokenSecret}`);
-  } else {
-    res.status(500).send('User data not available');
-  }
-});
+ //Twitter Routes
+ router.get('/auth/twitter', passport.authenticate('twitter'));
+
+ router.get('/auth/twitter/callback',
+   passport.authenticate('twitter', { failureRedirect: '/' }),
+   (req, res) => {
+     // Successful authentication
+     res.redirect('/');
+   });
+
+// Facebook Routes
+router.get('/auth/facebook', passport.authenticate('facebook'));
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
+  (req, res) => {
+    // Successful authentication
+    res.redirect('/');
+  });
 
 
-router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
-router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), (req, res) => {
-  if (req.user) {
-    res.redirect('/dashboard');
-  } else {
-    res.status(500).send('User data not available');
-  }
-});
+//Linkedin Routes
+  router.get('/auth/linkedin', passport.authenticate('linkedin'));
 
-router.get('/auth/linkedin', passport.authenticate('linkedin'));
-router.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/' }), (req, res) => {
-  if (req.user) {
-    res.redirect('/dashboard');
-  } else {
-    res.status(500).send('User data not available');
-  }
-});
+  router.get('/auth/linkedin/callback',
+    passport.authenticate('linkedin', { failureRedirect: '/' }),
+    (req, res) => {
+      // Successful authentication
+      res.redirect('/');
+    });
 
+//Instagram Routes
+
+router.get('/auth/instagram', passport.authenticate('instagram'));
+router.get('/auth/instagram/callback',
+  passport.authenticate('instagram', { failureRedirect: '/' }),
+  (req, res) => {
+    // Successful authentication
+    res.redirect('/');
+  });
 
 export default router;
