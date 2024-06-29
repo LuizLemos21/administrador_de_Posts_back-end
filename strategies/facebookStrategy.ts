@@ -1,5 +1,5 @@
 import passport from 'passport';
-import { Strategy as FacebookStrategy, Profile } from 'passport-facebook';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
@@ -14,22 +14,16 @@ passport.use(new FacebookStrategy({
   callbackURL: "http://localhost:3000/auth/facebook/callback",
   profileFields: ['id', 'emails', 'name']
 },
-<<<<<<< Updated upstream
 async (accessToken, refreshToken, profile, done) => {
-=======
-async (accessToken: string, refreshToken: string, profile: Profile, done: (error: any, user?: any) => void) => {
->>>>>>> Stashed changes
   try {
-    console.log("Profile:", profile);
-    console.log("Access Token:", accessToken);
-
     const userId = profile.id;
     const username = profile.displayName;
     const socialNetwork = 'facebook';
 
     const user = { id: userId, username, accessToken, profile };
 
-    const response = await axios.post(`http://localhost:3000/api/storeUserData`, {
+    // Save user data to the database via API call
+    const response = await axios.post(`http://localhost:3000/api/${userId}`, {
       userId,
       username,
       accessToken,
@@ -38,10 +32,6 @@ async (accessToken: string, refreshToken: string, profile: Profile, done: (error
 
     return done(null, user);
   } catch (error) {
-<<<<<<< Updated upstream
-=======
-    console.error("An error occurred during the Facebook login callback:", error);
->>>>>>> Stashed changes
     return done(error);
   }
 }));
