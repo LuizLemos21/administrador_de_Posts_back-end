@@ -9,19 +9,16 @@ import { authMiddleware } from '../middlewares/authMiddleware';
 const router = express.Router();
 const apiRedeSocialController = new APIRedeSocialController();
 
-// Use express-session middleware to enable session handling
 const JWT_SECRET = process.env.JWT_SECRET as string;
 router.use(session({
-    secret: JWT_SECRET, // Replace with a secure secret key
+    secret: JWT_SECRET,
     resave: false,
     saveUninitialized: true
 }));
 
-// Initialize Passport and restore authentication state, if any, from the session
 router.use(passport.initialize());
 router.use(passport.session());
 
-// Type guard to assert req.user is of the expected type
 function isUser(user: any): user is { id: string; username: string; token: string } {
     return user && typeof user.id === 'string' && typeof user.username === 'string' && typeof user.token === 'string';
 }
@@ -32,7 +29,6 @@ router.get('/auth/twitter', passport.authenticate('twitter'));
 router.get('/auth/twitter/callback',
     passport.authenticate('twitter', { failureRedirect: '/' }),
     (req, res) => {
-        // Successful authentication
         res.redirect('/');
     });
 
@@ -42,7 +38,6 @@ router.get('/auth/facebook', (req: Request, res: Response, next: NextFunction) =
     if (!userId) {
         return res.status(400).send('User ID is required');
     }
-    // Store userId in session to be used in the callback
     req.session.userId = userId;
     next();
 }, passport.authenticate('facebook'));
@@ -59,7 +54,7 @@ router.get('/auth/facebook/callback', (req: Request, res: Response, next: NextFu
             if (err) {
                 return next(err);
             }
-            return res.redirect('/'); // Redirect to a desired route after successful login
+            return res.redirect('/');
         });
     })(req, res, next);
 });
@@ -70,7 +65,6 @@ router.get('/auth/linkedin', passport.authenticate('linkedin'));
 router.get('/auth/linkedin/callback',
     passport.authenticate('linkedin', { failureRedirect: '/' }),
     (req, res) => {
-        // Successful authentication
         res.redirect('/');
     });
 
@@ -80,7 +74,6 @@ router.get('/auth/instagram', passport.authenticate('instagram'));
 router.get('/auth/instagram/callback',
     passport.authenticate('instagram', { failureRedirect: '/' }),
     (req, res) => {
-        // Successful authentication
         res.redirect('/');
     });
 

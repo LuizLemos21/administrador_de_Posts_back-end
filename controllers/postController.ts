@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { APIRedeSocial } from '../models/apiredesocialModel';
 import { postToFacebook } from '../services/facebookService';
 import { postToTwitter } from '../services/twitterService';
-import {Post} from '../models/postModel'
+import { Post } from '../models/postModel';
 import { postToLinkedIn } from '../services/linkedinService';
 import axios from 'axios';
 
@@ -56,7 +56,6 @@ export class PostController {
       return;
     }
 
-    // Type guard to ensure req.user is of type User
     const user = req.user as User;
     if (!user.id) {
       console.error("User ID is required but not provided");
@@ -65,7 +64,6 @@ export class PostController {
     }
 
     try {
-      // Retrieve access tokens from the /apiredesocial endpoint
       const response = await axios.get(`http://localhost:3000/apiredesocial`, {
         headers: {
           'Authorization': `Bearer ${user.token}`
@@ -78,7 +76,6 @@ export class PostController {
         throw new Error("Expected an array of tokens from /apiredesocial endpoint");
       }
 
-      // Create a map to easily access tokens by platform
       const tokenMap: { [key: string]: string } = {};
       tokens.forEach((token: any) => {
         tokenMap[token.socialNetwork] = token.accesstoken;
@@ -86,7 +83,6 @@ export class PostController {
 
       console.log("Retrieved tokens:", tokenMap);
 
-      // Publish the post on the selected platforms
       for (const platform of platforms) {
         if (platform === 'facebook' && tokenMap['facebook']) {
           console.log(`Posting to Facebook with token: ${tokenMap['facebook']}`);
@@ -98,7 +94,7 @@ export class PostController {
         }
         if (platform === 'linkedin' && tokenMap['linkedin']) {
           console.log(`Posting to LinkedIn with token: ${tokenMap['linkedin']}`);
-          await postToLinkedIn(tokenMap['linkedin'], message, tokenMap['linkedinPersonURN']); // Adjust parameters as needed
+          await postToLinkedIn(tokenMap['linkedin'], message, tokenMap['linkedinPersonURN']);
         }
       }
 

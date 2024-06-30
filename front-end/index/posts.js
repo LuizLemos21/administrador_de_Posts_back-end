@@ -75,38 +75,45 @@ document.addEventListener('DOMContentLoaded', function() {
                     listItem.insertBefore(countdown, listItem.querySelector('.post-actions'));
                     postsList.appendChild(listItem);
                 });
-
                 document.querySelectorAll('.publishButton').forEach(button => {
                     button.addEventListener('click', async function(event) {
-                        const postId = event.target.getAttribute('data-post-id');
-                        const selectedPlatforms = Array.from(button.closest('.post-actions').querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
-
-                        if (selectedPlatforms.length === 0) {
-                            alert('Please select at least one platform to publish');
-                            return;
+                      const postId = event.target.getAttribute('data-post-id');
+                      const selectedPlatforms = Array.from(button.closest('.post-actions').querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+                  
+                      if (selectedPlatforms.length === 0) {
+                        alert('Please select at least one platform to publish');
+                        return;
+                      }
+                  
+                      const token = localStorage.getItem('token'); // Ensure the token is stored in localStorage or retrieve it appropriately
+                  
+                      if (!token) {
+                        alert('User token is missing');
+                        return;
+                      }
+                  
+                      try {
+                        const response = await fetch(`http://localhost:3000/posts/${postId}/publish`, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}` // Pass the user token in the Authorization header
+                          },
+                          body: JSON.stringify({ platforms: selectedPlatforms })
+                        });
+                  
+                        if (response.ok) {
+                          alert('Post published successfully');
+                        } else {
+                          const data = await response.json();
+                          alert(data.message || 'Failed to publish post');
                         }
-
-                        try {
-                            const response = await fetch(`http://localhost:3000/posts/${postId}/publish`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                body: JSON.stringify({ platforms: selectedPlatforms })
-                            });
-
-                            if (response.ok) {
-                                alert('Post published successfully');
-                            } else {
-                                const data = await response.json();
-                                alert(data.message || 'Failed to publish post');
-                            }
-                        } catch (error) {
-                            alert('An error occurred. Please try again.');
-                        }
+                      } catch (error) {
+                        alert('An error occurred. Please try again.');
+                      }
                     });
-                });
+                  });
+                  
 
                 document.querySelectorAll('.delete-button').forEach(button => {
                     button.addEventListener('click', async function(event) {

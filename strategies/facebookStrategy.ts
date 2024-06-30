@@ -27,7 +27,7 @@ async (req, accessToken, refreshToken, profile, done) => {
     }
 
     if (!username) {
-      username = 'Unknown User'; // Fallback in case displayName and name are undefined
+      username = 'Unknown User';
     }
 
     const userId = req.session.userId;
@@ -41,7 +41,7 @@ async (req, accessToken, refreshToken, profile, done) => {
     const requestData = {
       nome: username,
       endpoint: 'https://graph.facebook.com/v12.0/me/feed',
-      userId, // Ensure this is correctly named according to your database schema
+      userId,
       accessToken,
       socialNetwork
     };
@@ -49,7 +49,6 @@ async (req, accessToken, refreshToken, profile, done) => {
     console.log("Extracted userId:", userId);
     console.log("Request Data:", requestData);
 
-    // Save user data to the database via API call
     const response = await axios.post(`http://localhost:3000/api/users`, requestData);
     console.log("API Response:", response.data);
 
