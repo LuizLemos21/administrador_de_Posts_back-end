@@ -17,7 +17,7 @@ export class APIRedeSocialController {
 
   public async storeUserData(req: Request, res: Response) {
     try {
-      const { userid, username, socialNetwork, accessToken } = req.body;
+      const { userId, nome, socialNetwork, accessToken } = req.body;
 
       const endpoints: { [key: string]: string } = {
         twitter: 'https://api.twitter.com/2/tweets',
@@ -32,9 +32,9 @@ export class APIRedeSocialController {
       }
 
       await APIRedeSocial.create({
-        nome: username ,
+        nome: nome ,
         endpoint: endpoint,
-        userid: userid,
+        userid: userId,
         accesstoken: accessToken,
         SocialNetwork: socialNetwork
       });

@@ -1,4 +1,3 @@
-// posts.js
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('postForm').addEventListener('submit', async function(event) {
         event.preventDefault();

@@ -16,7 +16,7 @@ passport.use(new FacebookStrategy({
   passReqToCallback: true
 },
 async (req, accessToken, refreshToken, profile, done) => {
-  console.log ("User ID:", req.query.userId);
+  console.log("User ID from session:", req.session.userId);
   console.log("Facebook Profile:", profile);
 
   try {
@@ -30,23 +30,23 @@ async (req, accessToken, refreshToken, profile, done) => {
       username = 'Unknown User'; // Fallback in case displayName and name are undefined
     }
 
-    const userid = req.session.userId as string;
-    if (!userid) {
-      throw new Error('User ID is missing in the query parameters.');
+    const userId = req.session.userId;
+    if (!userId) {
+      throw new Error('User ID is missing in the session.');
     }
 
     const socialNetwork = 'facebook';
-    const user = { id: userid, username, socialNetwork, accessToken, profile };
+    const user = { id: userId, username, socialNetwork, accessToken, profile };
 
     const requestData = {
-      username,
+      nome: username,
       endpoint: 'https://graph.facebook.com/v12.0/me/feed',
-      userid, 
+      userId, // Ensure this is correctly named according to your database schema
       accessToken,
       socialNetwork
     };
 
-    console.log("Extracted userId:", userid);
+    console.log("Extracted userId:", userId);
     console.log("Request Data:", requestData);
 
     // Save user data to the database via API call
