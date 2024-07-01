@@ -12,7 +12,7 @@ posts.put('/post/:id', postController.updatePost);
 posts.patch('/post/:id', postController.patchPost);
 posts.delete('/post/:id', postController.deletePost);
 
-posts.post('/posts/:id/publish', postController.publishPost);
+posts.post('/posts/:id/publish', authMiddleware, postController.publishPost);
 
 posts.get('/posts/:userId', postController.getPostsByUserId);
 

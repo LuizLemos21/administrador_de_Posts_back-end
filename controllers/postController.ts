@@ -5,6 +5,7 @@ import { postToTwitter } from '../services/twitterService';
 import { Post } from '../models/postModel';
 import { postToLinkedIn } from '../services/linkedinService';
 import axios from 'axios';
+import { postToInstagram } from '../services/instagramService';
 
 interface User {
   id: string;
@@ -49,7 +50,7 @@ export class PostController {
     const postId = req.params.id;
     const { platforms } = req.body;
     const message = "Your post message here"; // Replace this with the actual post message
-    
+
     if (!req.user) {
       console.error("Unauthorized access: req.user is undefined");
       res.status(401).send('Unauthorized');
@@ -64,17 +65,10 @@ export class PostController {
     }
 
     try {
-      const response = await axios.get(`http://localhost:3000/apiredesocial`, {
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
+      // Retrieve tokens from APIRedeSocial table
+      const tokens = await APIRedeSocial.findAll({
+        where: { userid: user.id }
       });
-
-      const tokens = response.data;
-
-      if (!Array.isArray(tokens)) {
-        throw new Error("Expected an array of tokens from /apiredesocial endpoint");
-      }
 
       const tokenMap: { [key: string]: string } = {};
       tokens.forEach((token: any) => {
@@ -94,7 +88,11 @@ export class PostController {
         }
         if (platform === 'linkedin' && tokenMap['linkedin']) {
           console.log(`Posting to LinkedIn with token: ${tokenMap['linkedin']}`);
-          await postToLinkedIn(tokenMap['linkedin'], message, tokenMap['linkedinPersonURN']);
+          await postToLinkedIn(tokenMap['linkedin'], message);
+        }
+        if (platform === 'instagram' && tokenMap['instagram']) {
+          console.log(`Posting to Instagram with token: ${tokenMap['instagram']}`);
+          await postToInstagram(tokenMap['instagram'], message);
         }
       }
 

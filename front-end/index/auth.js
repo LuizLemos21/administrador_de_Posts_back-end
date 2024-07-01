@@ -11,19 +11,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.getElementById('linkTwitter').addEventListener('click', function() {
-        window.location.href = 'http://localhost:3000/auth/twitter';
+        console.log("Calling out to twitter api...")
+
+        window.location.href = `http://localhost:3000/auth/twitter?userId=${userId}`;
     });
     
     document.getElementById('linkFacebook').addEventListener('click', function(){
+        console.log("Calling out to facebook api...")
+
         window.location.href = `http://localhost:3000/auth/facebook?userId=${userId}`;
     });
 
     document.getElementById('linkLinkedIn').addEventListener('click', function(){
-        window.location.href = `http://localhost:3000/auth/linkedin`;
+        window.location.href = `http://localhost:3000/auth/linkedin?userId=${userId}`;
     });
 
     document.getElementById('linkInstagram').addEventListener('click', function(){
-        window.location.href = `http://localhost:3000/auth/instagram`;
+        window.location.href = `http://localhost:3000/auth/instagram?userId=${userId}`;
     });
 /*
     document.getElementById('linkTwitter').addEventListener('click', async function() {

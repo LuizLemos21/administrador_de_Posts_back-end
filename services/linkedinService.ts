@@ -1,38 +1,41 @@
 import axios from 'axios';
 
-const LINKEDIN_API_URL = 'https://api.linkedin.com/v2/ugcPosts';
-
-export const postToLinkedIn = async (accessToken: string, message: string, linkedInPersonURN: string) => {
-  const url = LINKEDIN_API_URL;
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    'X-Restli-Protocol-Version': '2.0.0',
-    'Content-Type': 'application/json',
-  };
-  const data = {
-    author: `urn:li:person:${linkedInPersonURN}`,
-    lifecycleState: 'PUBLISHED',
-    specificContent: {
-      'com.linkedin.ugc.ShareContent': {
-        shareCommentary: {
-          text: message,
-        },
-        shareMediaCategory: 'NONE',
-      },
-    },
-    visibility: {
-      'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-    },
-  };
-
+export async function postToLinkedIn(accessToken: string, message: string): Promise<void> {
   try {
-    const response = await axios.post(url, data, { headers });
-    return response.data;
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`LinkedIn API error: ${error.response?.data.message}`);
-    } else {
-      throw new Error(`Unknown error: ${error.message}`);
-    }
+    const response = await axios.post(
+      `https://api.linkedin.com/v2/shares`,
+      {
+        content: {
+          contentEntities: [
+            {
+              entityLocation: "https://www.example.com/content.html",
+              thumbnails: [
+                {
+                  resolvedUrl: "https://www.example.com/image.jpg"
+                }
+              ]
+            }
+          ],
+          title: "Test Share with Content"
+        },
+        distribution: {
+          linkedInDistributionTarget: {}
+        },
+        owner: `urn:li:person:${accessToken}`, // Replace with actual owner URN
+        subject: "Test Share Subject",
+        text: {
+          text: message
+        }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }
+    );
+    console.log("LinkedIn post response:", response.data);
+  } catch (error) {
+    console.error("Error posting to LinkedIn:", error);
+    throw error;
   }
-};
+}

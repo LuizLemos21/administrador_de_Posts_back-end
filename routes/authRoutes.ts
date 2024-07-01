@@ -3,11 +3,11 @@ import passport from 'passport';
 import session from 'express-session';
 import '../strategies/twitterStrategy';
 import '../strategies/facebookStrategy';
-import { APIRedeSocialController } from '../controllers/apiredesocialController';
+import '../strategies/instagramStrategy';
+import '../strategies/linkedinStrategy';
 import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = express.Router();
-const apiRedeSocialController = new APIRedeSocialController();
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 router.use(session({
@@ -19,18 +19,32 @@ router.use(session({
 router.use(passport.initialize());
 router.use(passport.session());
 
-function isUser(user: any): user is { id: string; username: string; token: string } {
-    return user && typeof user.id === 'string' && typeof user.username === 'string' && typeof user.token === 'string';
-}
-
 // Twitter Routes
-router.get('/auth/twitter', passport.authenticate('twitter'));
+router.get('/auth/twitter', (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.query.userId as string;
+    if (!userId) {
+        return res.status(400).send('User ID is required');
+    }
+    req.session.userId = userId;
+    next();
+}, passport.authenticate('twitter'));
 
-router.get('/auth/twitter/callback',
-    passport.authenticate('twitter', { failureRedirect: '/' }),
-    (req, res) => {
-        res.redirect('/');
-    });
+router.get('/auth/twitter/callback', (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('twitter', (err: any, user: any, info: any) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.redirect('/');
+        }
+        req.logIn(user, (err: any) => {
+            if (err) {
+                return next(err);
+            }
+            return res.redirect('/');
+        });
+    })(req, res, next);
+});
 
 // Facebook Routes
 router.get('/auth/facebook', (req: Request, res: Response, next: NextFunction) => {
